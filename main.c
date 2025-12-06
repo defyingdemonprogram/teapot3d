@@ -92,7 +92,7 @@ int main(void) {
    Atom wm_delete_window = XInternAtom(display, "WM_DELETE_WINDOW", False);
    XSetWMProtocols(display, window, &wm_delete_window, 1);
 
-   XSelectInput(display, window, KeyPressMask | PointerMotionMask);
+   XSelectInput(display, window, KeyPressMask | KeyReleaseMask | PointerMotionMask);
    XStoreName(display, window, "Game Console");
 
    XMapWindow(display, window);
@@ -107,11 +107,16 @@ int main(void) {
            XNextEvent(display, &event);
            switch (event.type) {
                case KeyPress: {
+                    game_key_down(XLookupKeysym(&event.xkey, 0));
                     switch (XLookupKeysym(&event.xkey, 0)) {
                         case 'q':
                             quit = true;
                             break;
                     }
+                } break;
+
+               case KeyRelease: {
+                    game_key_up(XLookupKeysym(&event.xkey, 0));
                 } break;
 
                case MotionNotify: {

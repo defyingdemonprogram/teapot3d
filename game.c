@@ -87,9 +87,26 @@ float dy = 300.0f;
 float cx = DISPLAY_WIDTH / 8;
 float cy = DISPLAY_HEIGHT / 8;
 
+static Vector3 camera_pos = {0, 0, 1};
+static int key_w = 0;
+static int key_s = 0;
+static int key_a = 0;
+static int key_d = 0;
+static int key_up = 0;
+static int key_down = 0;
+
 void game_update(void){
     // Audio
     stb_vorbis_get_samples_short_interleaved(ogg, AUDIO_CHANNELS, audio, ARRAY_LEN(audio));
+
+    // Camera movement
+    float speed = 2.0f * DELTA_TIME;
+    if (key_w) camera_pos.z -= speed;
+    if (key_s) camera_pos.z += speed;
+    if (key_a) camera_pos.x -= speed;
+    if (key_d) camera_pos.x += speed;
+    if (key_up) camera_pos.y += speed;
+    if (key_down) camera_pos.y -= speed;
     // Display
     for (size_t i = 0; i < ARRAY_LEN(display); i++) {
         display[i] = (Color) {
@@ -151,7 +168,7 @@ void game_update(void){
     // Clear zbuffer
     for (size_t i = 0; i < DISPLAY_WIDTH * DISPLAY_HEIGHT; ++i) zbuffer[i] = 0;
 
-    Vector3 camera = {0, 0, 1};
+    Vector3 camera = camera_pos;
     for (size_t i = 0; i < faces_count; ++i) {
         int a, b, c;
 
@@ -161,6 +178,9 @@ void game_update(void){
         Vector3 v1 = rotate_y(make_vector3(vertices[a][0], vertices[a][1], vertices[a][2]), angle);
         Vector3 v2 = rotate_y(make_vector3(vertices[b][0], vertices[b][1], vertices[b][2]), angle);
         Vector3 v3 = rotate_y(make_vector3(vertices[c][0], vertices[c][1], vertices[c][2]), angle);
+        v1.x -= camera.x; v1.y -= camera.y; v1.z -= camera.z;
+        v2.x -= camera.x; v2.y -= camera.y; v2.z -= camera.z;
+        v3.x -= camera.x; v3.y -= camera.y; v3.z -= camera.z;
         v1.z += 1.5; v2.z += 1.5; v3.z += 1.5;
 
         a = faces[i][FACE_VN1];
@@ -211,16 +231,32 @@ void game_update(void){
             }
         }
     }
-    angle += M_PI * DELTA_TIME;
+    
+    char buffer[256];
+    snprintf(buffer, sizeof(buffer), "camera: %.2f %.2f %.2f", camera_pos.x, camera_pos.y, camera_pos.z);
+    olivec_text(oc, buffer, 10, 10, olivec_default_font, 3, 0xFFFFFFFF);
 
+    angle += M_PI * DELTA_TIME;
 #endif // 0
 }
 
 void game_key_up(int key) {
-    (void)key;
-    TODO("game_key_up");
+    switch (key) {
+        case 'w': key_w = 0; break;
+        case 's': key_s = 0; break;
+        case 'a': key_a = 0; break;
+        case 'd': key_d = 0; break;
+        case 0xff52: key_up = 0; break;   // XK_Up
+        case 0xff54: key_down = 0; break; // XK_Down
+    }
 }
 void game_key_down(int key) {
-    (void)key;
-    TODO("game_key_down");
+    switch (key) {
+        case 'w': key_w = 1; break;
+        case 's': key_s = 1; break;
+        case 'a': key_a = 1; break;
+        case 'd': key_d = 1; break;
+        case 0xff52: key_up = 1; break;   // XK_Up
+        case 0xff54: key_down = 1; break; // XK_Down
+    }
 }
