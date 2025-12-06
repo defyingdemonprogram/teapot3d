@@ -8,6 +8,7 @@
 #include "olive.c"
 //#define OBJ_H_
 #include "utahTeapot.c"
+#include "vec.h"
 
 
 #define TODO(...) printf("%s\n", #__VA_ARGS__)
@@ -46,22 +47,6 @@ typedef enum {
     FACE_VN3,
 } Face_Index;
 
-typedef struct {
-    float x, y;
-} Vector2;
-
-static Vector2 make_vector2(float x, float y) {
-    return (Vector2) {.x = x, .y = y};
-}
-
-typedef struct {
-    float x, y, z;
-} Vector3;
-
-static Vector3 make_vector3(float x, float y, float z) {
-    return (Vector3) {.x = x, .y = y, .z = z};
-}
-
 static Vector2 project_3d_to_2d(Vector3 v) {
     if (v.z < 0) v.z = -v.z;
     if (v.z < EPSILON) v.z += EPSILON;
@@ -73,16 +58,6 @@ static Vector2 project_to_screen(Vector2 v) {
         (v.x + 1) * 0.5f * DISPLAY_WIDTH,
         (1 - (v.y + 1) * 0.5f) * DISPLAY_HEIGHT
     );
-}
-
-static Vector3 rotate_y(Vector3 p, float delta_angle) {
-    float angle = atan2f(p.z, p.x) + delta_angle;
-    float mag = sqrtf(p.x * p.x + p.z * p.z);
-    return make_vector3(cosf(angle) * mag, p.y, sinf(angle) * mag);
-}
-
-static float vector3_dot(Vector3 a, Vector3 b) {
-    return a.x*b.x + a.y*b.y + a.z*b.z;
 }
 
 Game game_init(void) {
