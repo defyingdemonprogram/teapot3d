@@ -31,7 +31,7 @@ static int16_t audio[AUDIO_CAPACITY];
 
 // Buffers
 static Color  display[DISPLAY_WIDTH * DISPLAY_HEIGHT];
-static int    zbuffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+static float  zbuffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
 
 static stb_vorbis *ogg = NULL;
 
@@ -189,9 +189,10 @@ void game_update(void){
         Vector3 vn1 = rotate_y(make_vector3(normals[a][0], normals[a][1], normals[a][2]), angle);
         Vector3 vn2 = rotate_y(make_vector3(normals[b][0], normals[b][1], normals[b][2]), angle);
         Vector3 vn3 = rotate_y(make_vector3(normals[c][0], normals[c][1], normals[c][2]), angle);
-        if (vector3_dot(camera, vn1) > 0.0 &&
-            vector3_dot(camera, vn2) > 0.0 &&
-            vector3_dot(camera, vn3) > 0.0) continue;
+        // Backface Culling
+        if (vector3_dot(v1, vn1) > 0.0 &&
+            vector3_dot(v2, vn2) > 0.0 &&
+            vector3_dot(v3, vn3) > 0.0) continue;
 
 
         Vector2 p1 = project_to_screen(project_3d_to_2d(v1));

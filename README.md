@@ -6,7 +6,10 @@ A lightweight, software-based 3D rendering engine written in C. This project dem
 
 - **Software Rasterization**: Implements 3D projection, rotation, and triangle rasterization from scratch.
 - **Z-Buffering**: Handles depth visibility to correctly render overlapping faces.
-- **Lighting**: Basic lighting implementation using face normals.
+- **Interactive Camera System**: Move the camera using WASD and Arrow keys.
+- **Backface Culling**: Optimizes rendering by skipping faces pointing away from the camera.
+- **Directional Lighting**: Improved lighting model with ambient and directional components.
+- **Debug Text Rendering**: Displays camera position and other debug info.
 - **Audio**: Background music playback using PulseAudio and `stb_vorbis`.
 - **No Heavy Dependencies**: Built with standard C libraries and minimal system libraries (X11, PulseAudio).
 
@@ -40,6 +43,8 @@ sudo apt install libx11-dev libxrandr-dev libpulse-dev ffmpeg
 
 ## Controls
 
+- **`W`, `A`, `S`, `D`**: Move camera (Forward, Left, Backward, Right).
+- **`Up`, `Down`**: Move camera Up/Down.
 - **`q`**: Quit the application.
 
 ## Audio Assets
