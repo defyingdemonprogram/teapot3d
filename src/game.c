@@ -1,14 +1,13 @@
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "math.h"
 #include "game.h"
+#include "vec.h"
 #include "stb_vorbis.c"
 #define OLIVEC_IMPLEMENTATION
 #include "olive.c"
 //#define OBJ_H_
 #include "utahTeapot.c"
-#include "vec.h"
 
 
 #define TODO(...) printf("%s\n", #__VA_ARGS__)
@@ -47,11 +46,6 @@ typedef enum {
     FACE_VN3,
 } Face_Index;
 
-static Vector2 project_3d_to_2d(Vector3 v) {
-    if (v.z < 0) v.z = -v.z;
-    if (v.z < EPSILON) v.z += EPSILON;
-    return make_vector2(v.x / v.z, v.y / v.z);
-}
 
 static Vector2 project_to_screen(Vector2 v) {
     return make_vector2(

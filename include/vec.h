@@ -29,4 +29,10 @@ static inline Vector3 rotate_y(Vector3 p, float delta_angle) {
     return make_vector3(cosf(angle) * mag, p.y, sinf(angle) * mag);
 }
 
+static inline Vector2 project_3d_to_2d(Vector3 v) {
+    if (v.z < 0) v.z = -v.z;
+    if (v.z < 1e-6) v.z += 1e-6;
+    return make_vector2(v.x / v.z, v.y / v.z);
+}
+
 #endif // VEC_H_
